@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointment Details</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    width: 800px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .details {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Appointment Details</h2>
+  <div class="details">
+    <label for="input">Enter appointment details:</label><br>
+    <textarea id="input" rows="10" cols="50"></textarea>
+  </div>
+  <button onclick="extractAndFillForm()">Extract Details</button>
+
+  <h2>Appointment Form</h2>
+  <form id="appointmentForm"
+       action="demo.html"
+        name="appointmentForm"
+        autocomplete="off"
+        method="POST"
+>
+      <div class="details">
+        <label for="AgentName">Agent Name:</label><br>
+        <select id="AgentName" name="Agent Name">
+          <option value="VA13_Sahul">VA13_Sahul</option>
+          <option value="VA07_Kashi">VA07_Kashi </option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+    <div class="details">
+      <label for="patientName">Patient Name:</label><br>
+      <input type="text" id="patientName" name="Guest Name">
+    </div>
+    <div class="details">
+      <label for="patientMobile">Patient Mobile Number:</label><br>
+      <input type="tel" id="patientMobile" name="Mobile No">
+    </div>
+    <div class="details">
+      <label for="doctorName">Doctor Name:</label><br>
+      <input type="text" id="doctorName" name="doctorName">
+    </div>
+
+      <div class="details">
+        <label for="Specilization">Doctor Specilization:</label><br>
+        <select id="Specilization" name="Service">
+          <option value="Pediatric">Pediatric</option>
+          <option value="Allied Service">Allied Service </option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+
+      <div class="details">
+        <label for="Location">Hospital Location:</label><br>
+        <select id="Location" name="Center">
+          <option value="HRBR">HRBE</option>
+          <option value="SKR">SKR</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+
+    <div class="details">
+      <label for="appointmentDate">Appointment Date:</label><br>
+      <input type="date" id="appointmentDate" name="appointmentDate">
+    </div>
+    <div class="details">
+      <label for="appointmentTime">Appointment Time:</label><br>
+      <input type="time" id="appointmentTime" name="appointmentTime">
+    </div>
+
+      <div class="details">
+        <label for="Campaign">Campaign:</label><br>
+        <select id="Campaign" name="Campaign">
+          <option value="IB Follow up">IB Follow up</option>
+          <option value="Phonecall">Phonecall</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+
+      <div class="details">
+        <label for="leadStatus">Lead Status:</label><br>
+        <select id="leadStatus" name="Appointment Booked Status">
+          <option value="New">New</option>
+          <option value="Existing ">Existing </option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+<input type="submit" value="Send" class="btn" id="send" name="send"/>
+
+  </form>
+</div>
+
+<script>
+function extractAndFillForm() {
+    const input = document.getElementById('input').value;
+    console.log("Input Text:", input); // Debugging
+    
+  const patientNameRegex = /(.*?)(MPI:)/is;
+    const doctorNameRegex = /(?:Dr\s)(.*?)(?:\s+on)/i;
+    const mobileRegex = /\b\d{10}\b/;
+    const dateRegex = /(?:on\s)(.*?\d{4})/;
+    const timeRegex = /\b\d{4}\b/;
+
+    const patientNameMatch = patientNameRegex.exec(input);
+    const mobileMatch = mobileRegex.exec(input);
+    const doctorNameMatch = doctorNameRegex.exec(input);
+    const dateMatch = dateRegex.exec(input);
+    const timeMatch = timeRegex.exec(input);
+    
+    console.log("Patient Name Match:", patientNameMatch); // Debugging
+
+    if (patientNameMatch) {
+      document.getElementById('patientName').value = patientNameMatch[1].trim();
+    }
+    if (mobileMatch) {
+      document.getElementById('patientMobile').value = mobileMatch[0].trim();
+    }
+    if (doctorNameMatch) {
+      document.getElementById('doctorName').value = doctorNameMatch[1].trim();
+    }
+    if (dateMatch) {
+      // Format date to yyyy-MM-dd
+      const appointmentDate = new Date(dateMatch[1].trim()).toISOString().split('T')[0];
+      document.getElementById('appointmentDate').value = appointmentDate;
+    }
+    if (timeMatch) {
+      // Format time to HH:mm
+      const appointmentTime = timeMatch[0].trim().replace(/(\d{2})(\d{2})/, '$1:$2');
+      document.getElementById('appointmentTime').value = appointmentTime;
+    }
+}
+
+
+
+  document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    for (const [name, value] of formData) {
+      console.log(`${name}: ${value}`);
+    }
+    // Here you can perform further actions like sending the form data to a server
+  });
+</script>
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbwTSS3BYdf4gsIth_m_5grDSJ1p8gZt9JPMD5PHUYxVwEluoN6d3WvIidqBOGsMA6MQ/exec";
+
+const form = document.forms["appointmentForm"];
+
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  document.querySelector('input[name="send"]').value = "wait";
+
+  fetch(scriptURL, { method: "POST", body: new FormData(form) })
+    .then((response) => {
+      alert("Thank you! your form is submitted successfully.");
+  
+    })
+    // .then(() => {
+    //   window.location.reload();
+    // })
+    .catch((error) => console.error("Error!", error.message));
+  // alert("Thank you! your form is submitted successfully.");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <title>Disposition Form</title>
+    <style>
+      .loading {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>Disposition Form</header>
+      <form
+        action="index.html"
+        name="submit-to-google-sheet"
+        autocomplete="off"
+        method="POST"
+        id="form"
+      >
+        <div class="form first">
+          <div class="details personal">
+            <div class="fields">
+              <div class="input-field">
+                <textarea
+                  id="input"
+                  rows="5"
+                  cols="50"
+                  placeholder="  Enter Appointment Details"
+                ></textarea>
+              </div>
+              <div class="input-field">
+                <label>Agent Name</label>
+                <select name="Department" id="department-select" required>
+                  <option disabled selected>Select Agent Name</option>
+                </select>
+              </div>
+              <div class="input-field">
+                <label>Campaign Type</label>
+                <select name="Department" id="department-select" required>
+                  <option disabled selected>Select Campaign Type</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="details ID">
+            <header>Patient Details</header>
+            <div class="fields">
+              <div class="input-field">
+                <label>Patient Name</label>
+                <input
+                  type="name"
+                  placeholder="Enter Patient Name"
+                  name=""
+                  id="patientName"
+                  required
+                />
+              </div>
+
+              <div class="input-field">
+                <label>Patient Mobile Number</label>
+                <input
+                  type="name"
+                  placeholder="Enter Mobile Number"
+                  name=""
+                  id="patientMobile"
+                  required
+                />
+              </div>
+
+              <div class="input-field">
+                <label>Hospital Location</label>
+                <select name="Service" id="service-select" required>
+                  <option disabled selected>Select Hospital Location</option>
+                </select>
+              </div>
+
+              <div class="input-field">
+                <label>Lead Status</label>
+                <select name="Service" id="service-select" required>
+                  <option disabled selected>Select Lead Status</option>
+                  <option>Hot Lead</option>
+                  <option>Existing Customer</option>
+                </select>
+              </div>
+
+              <div class="input-field">
+                <label>Doctor Name</label>
+
+                <input
+                  type="name"
+                  placeholder="Enter Doctor Name"
+                  name=""
+                  id="doctorName"
+                  required
+                />
+              </div>
+              <div class="input-field">
+                <label>Doctor Specilization</label>
+                <select
+                  name="Customer Source"
+                  id="customer-source-select"
+                  required
+                >
+                  <option selected disabled>Select Doctor Specilization</option>
+                  <option value="Pediatric">Pediatric</option>
+                  <option value="Gyaecology">Gyaecology</option>
+                  <option value="Fertility">Fertility</option>
+                  <option value="Pregnancy">Pregnancy</option>
+                  <option value="Radiology">Radiology</option>
+                  <option value="Allied Services">Allied Services</option>
+                </select>
+              </div>
+              <div class="input-field">
+                <label>Appointment Date</label>
+                <input
+                  type="date"
+                  id="appointmentDate"
+                  name="appointmentDate"
+                  placeholder="Appointment Date"
+                />
+              </div>
+              <div class="input-field">
+                <label>Appointment Time</label>
+                <input
+                  type="time"
+                  id="appointmentTime"
+                  name="appointmentTime"
+                  placeholder="Appointment Time"
+                />
+              </div>
+              <div class="input-field">
+                <label>Expected Delivery Date</label>
+                <input
+                  type="date"
+                  id="expectedDeliveryDate"
+                  name="Expected Delivery Date"
+                  placeholder="Expected Delivery Date"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="buttons">
+            <button
+              type="button"
+              class="backBtn"
+              onclick="extractAndFillForm()"
+            >
+              <i class="uil uil-navigator"></i>
+              <span class="btnText">Extract Details</span>
+            </button>
+            <button type="submit" class="submit">
+              <span class="btnText">Submit</span>
+              <i class="uil uil-navigator"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function extractAndFillForm() {
+        const input = document.getElementById("input").value;
+
+        const patientNameRegex = /(.*?)(MPI:)/is;
+        const doctorNameRegex = /(?:Dr\s)(.*?)(?:\son)/i;
+        const mobileRegex = /\b\d{10}\b/;
+        const dateRegex = /(?:on\s)(\w{3}\s\d{2}\s\w{3}\s\d{4})/i;
+        const timeRegex = /(\d{2}:\d{2}\s(?:AM|PM))/i;
+
+        const patientNameMatch = patientNameRegex.exec(input);
+        const mobileMatch = mobileRegex.exec(input);
+        const doctorNameMatch = doctorNameRegex.exec(input);
+        const dateMatch = dateRegex.exec(input);
+        const timeMatch = timeRegex.exec(input);
+
+        if (patientNameMatch) {
+          document.getElementById("patientName").value =
+            patientNameMatch[1].trim();
+        }
+        if (mobileMatch) {
+          document.getElementById("patientMobile").value =
+            mobileMatch[0].trim();
+        }
+        if (doctorNameMatch) {
+          document.getElementById("doctorName").value =
+            doctorNameMatch[1].trim();
+        }
+        if (dateMatch) {
+          // Parse date manually to avoid timezone issues
+          const dateParts = dateMatch[1].split(" ");
+          const day = dateParts[1];
+          const month = dateParts[2];
+          const year = dateParts[3];
+
+          // Map month name to month number
+          const monthMap = {
+            Jan: "01",
+            Feb: "02",
+            Mar: "03",
+            Apr: "04",
+            May: "05",
+            Jun: "06",
+            Jul: "07",
+            Aug: "08",
+            Sep: "09",
+            Oct: "10",
+            Nov: "11",
+            Dec: "12",
+          };
+
+          const formattedDate = `${year}-${monthMap[month]}-${day.padStart(
+            2,
+            "0"
+          )}`;
+          document.getElementById("appointmentDate").value = formattedDate;
+        }
+        if (timeMatch) {
+          // Convert time "09:00 AM" to "HH:mm"
+          let [time, modifier] = timeMatch[1].split(" ");
+          let [hours, minutes] = time.split(":");
+          if (modifier === "PM" && hours !== "12") {
+            hours = String(Number(hours) + 12);
+          } else if (modifier === "AM" && hours === "12") {
+            hours = "00";
+          }
+          const formattedTime = `${hours}:${minutes}`;
+          document.getElementById("appointmentTime").value = formattedTime;
+        }
+      }
+    </script>
+  </body>
+</html>

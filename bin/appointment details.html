@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointment Details</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .details {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Appointment Details</h2>
+  <div class="details">
+    <label for="input">Enter appointment details:</label><br>
+    <textarea id="input" rows="10" cols="50"></textarea>
+  </div>
+  <button onclick="extractDetails()">Extract Details</button>
+  <div id="output"></div>
+
+  <script>
+    function extractDetails() {
+      const input = document.getElementById('input').value;
+      let patientName = '';
+      let doctorName = '';
+      let patientMobile = '';
+      let appointmentDate = '';
+      let appointmentTime = '';
+
+      const patientNameRegex = /(.*?)(MPI:)/is;
+      const doctorNameRegex = /(?:dr\s)(.*?)(?:\son)/i;
+      const mobileRegex = /(?:\d{10})/g;
+      const dateRegex = /(?:on\s)(.*?\d{4})/;
+      const timeRegex = /(?:\d{4})(.*?)(?:for)/;
+
+      const patientNameMatch = patientNameRegex.exec(input);
+      const doctorNameMatch = doctorNameRegex.exec(input);
+      const dateMatch = dateRegex.exec(input);
+      const timeMatch = timeRegex.exec(input);
+      let mobileMatches = input.match(mobileRegex);
+
+      if (patientNameMatch) {
+        patientName = patientNameMatch[1].trim();
+      }
+      if (doctorNameMatch) {
+        doctorName = doctorNameMatch[1].trim();
+      }
+      if (mobileMatches && mobileMatches.length > 1) {
+        // Assuming the second series of numbers is the mobile number
+        patientMobile = mobileMatches[1].trim();
+      }
+      if (dateMatch) {
+        appointmentDate = dateMatch[1].trim();
+      }
+      if (timeMatch) {
+        appointmentTime = timeMatch[1].trim();
+      }
+
+      const output = document.getElementById('output');
+      output.innerHTML = `
+        <p><strong>Patient Name:</strong> ${patientName}</p>
+        <p><strong>Patient Mobile:</strong> ${patientMobile}</p>
+        <p><strong>Doctor Name:</strong> ${doctorName}</p>
+        <p><strong>Appointment Date:</strong> ${appointmentDate}</p>
+        <p><strong>Appointment Time:</strong> ${appointmentTime}</p>
+      `;
+    }
+  </script>
+</div>
+</body>
+</html>
