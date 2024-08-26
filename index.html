@@ -20,7 +20,7 @@
     <div class="container">
       <header>Disposition Form</header>
       <form
-        action="index.html"
+        action=""
         name="submit-to-google-sheet"
         autocomplete="off"
         method="POST"
@@ -39,14 +39,18 @@
               </div>
               <div class="input-field">
                 <label>Agent Name</label>
-                <select name="Department" id="department-select" required>
+                <select name="Agent Name" id="agentName" required>
                   <option disabled selected>Select Agent Name</option>
+                  <option value="Shahul Hameed S">Shahul Hameed S</option>
+                  <option value="Kashinath">Kashinath</option>
                 </select>
               </div>
               <div class="input-field">
                 <label>Campaign Type</label>
-                <select name="Department" id="department-select" required>
+                <select name="Campaign Type" id="campaignType" required>
                   <option disabled selected>Select Campaign Type</option>
+                  <option value="Inbound">Inbound</option>
+                  <option value="IB Follow up">IB Follow up</option>
                 </select>
               </div>
             </div>
@@ -60,7 +64,7 @@
                 <input
                   type="name"
                   placeholder="Enter Patient Name"
-                  name=""
+                  name="Patient Name"
                   id="patientName"
                   required
                 />
@@ -71,7 +75,7 @@
                 <input
                   type="name"
                   placeholder="Enter Mobile Number"
-                  name=""
+                  name="Mobile Number"
                   id="patientMobile"
                   required
                 />
@@ -79,18 +83,21 @@
 
               <div class="input-field">
                 <label>Hospital Location</label>
-                <select name="Service" id="service-select" required>
+                <select name="Hospital Location" id="hospitalLocation" required>
                   <option disabled selected>Select Hospital Location</option>
+                  <option value="TNG">TNG</option>
+                  <option value="OMR">OMR</option>
                 </select>
               </div>
 
               <div class="input-field">
-                <label>Lead Status</label>
-                <select name="Service" id="service-select" required>
-                  <option disabled selected>Select Lead Status</option>
-                  <option>Hot Lead</option>
-                  <option>Existing Customer</option>
-                </select>
+                <label>Expected Delivery Date</label>
+                <input
+                  type="date"
+                  id="expectedDeliveryDate"
+                  name="Expected Delivery Date"
+                  placeholder="Expected Delivery Date"
+                />
               </div>
 
               <div class="input-field">
@@ -99,7 +106,7 @@
                 <input
                   type="name"
                   placeholder="Enter Doctor Name"
-                  name=""
+                  name="Doctor Name"
                   id="doctorName"
                   required
                 />
@@ -107,8 +114,8 @@
               <div class="input-field">
                 <label>Doctor Specilization</label>
                 <select
-                  name="Customer Source"
-                  id="customer-source-select"
+                  name="Doctor Specilization"
+                  id="doctorSpecilization"
                   required
                 >
                   <option selected disabled>Select Doctor Specilization</option>
@@ -125,7 +132,7 @@
                 <input
                   type="date"
                   id="appointmentDate"
-                  name="appointmentDate"
+                  name="Appointment Date"
                   placeholder="Appointment Date"
                 />
               </div>
@@ -134,18 +141,19 @@
                 <input
                   type="time"
                   id="appointmentTime"
-                  name="appointmentTime"
+                  name="Appointment Time"
                   placeholder="Appointment Time"
                 />
               </div>
               <div class="input-field">
-                <label>Expected Delivery Date</label>
-                <input
-                  type="date"
-                  id="expectedDeliveryDate"
-                  name="Expected Delivery Date"
-                  placeholder="Expected Delivery Date"
-                />
+                <label>Lead Status</label>
+                <select name="Lead Status" id="leadStatus" required>
+                  <option disabled selected value="Select Lead Status">
+                    Select Lead Status
+                  </option>
+                  <option>Hot Lead</option>
+                  <option>Existing Customer</option>
+                </select>
               </div>
             </div>
           </div>
@@ -158,7 +166,7 @@
               <i class="uil uil-navigator"></i>
               <span class="btnText">Extract Details</span>
             </button>
-            <button type="submit" class="submit">
+            <button type="submit" class="submit" id="submit" value="submit">
               <span class="btnText">Submit</span>
               <i class="uil uil-navigator"></i>
             </button>
@@ -236,6 +244,63 @@
           const formattedTime = `${hours}:${minutes}`;
           document.getElementById("appointmentTime").value = formattedTime;
         }
+      }
+    </script>
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbxmrM5Ko90G3yOqJHrHyLSYt5OdV9VnpxvrX_baSXKzSpySaR2_CtIZPaEHeFhT7MUB/exec";
+
+      const form = document.forms["submit-to-google-sheet"];
+    </script>
+
+    <script>
+      document
+        .getElementById("form")
+        .addEventListener("submit", function (event) {
+          // Get the hospital location dropdown
+          const hospitalLocation = document.getElementById("hospitalLocation");
+          const agentName = document.getElementById("agentName");
+          const campaignType = document.getElementById("campaignType");
+          const leadStatus = document.getElementById("leadStatus");
+
+          // Check if the selected option is the default one
+          if (hospitalLocation.value === "Select Hospital Location") {
+            // If so, prevent form submission
+            alert("Please select a valid Hospital Location.");
+            event.preventDefault();
+          } else if (agentName.value === "Select Agent Name") {
+            alert("Please select a valid Agent Name.");
+            event.preventDefault();
+          } else if (campaignType.value === "Select Campaign Type") {
+            alert("Please select a valid Campaign Type.");
+            event.preventDefault();
+          } else if (leadStatus.value === "Select Lead Status") {
+            alert("Please select a valid Lead Status.");
+            event.preventDefault();
+          } else {
+            event.preventDefault();
+            fetch(scriptURL, { method: "POST", body: new FormData(form) })
+              .then((response) =>
+                alert("Thank you! your form is submitted successfully.")
+              )
+              .then(() => {
+                clearForm(); // Clear the form fields except Agent Name and Campaign Type
+                // window.location.reload();
+              })
+              .catch((error) => console.error("Error!", error.message));
+          }
+        });
+      function clearForm() {
+        // Get all input and select fields except Agent Name and Campaign Type
+        const fieldsToClear = document.querySelectorAll(
+          "#form input:not(#agentName, #campaignType), #form select:not(#agentName, #campaignType), #form textarea"
+        );
+
+        // Clear the value of each field
+        fieldsToClear.forEach((field) => (field.value = ""));
+
+        // Reset the "Hospital Location" dropdown to the default option
+        document.getElementById("hospitalLocation").selectedIndex = 0;
       }
     </script>
   </body>
