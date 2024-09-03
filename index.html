@@ -305,7 +305,8 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         fetch(
-          "https://script.google.com/macros/s/AKfycbxcjfI7uay-UryQJ301Yt0sfsHzOmFkbQFbmtkiEIU4TOfx1IDfJwSX0A6bxZcADT-r/exec"
+          "https://script.google.com/macros/s/AKfycbzFfysyBjqRHLGQghrHX2TZ2rDKKHXI_EO-VaVwMfUkuKAJNHn_uDoJzMHF198-LXo/exec",
+          { mode: "no-cors" }
         )
           .then((response) => response.text())
           .then((data) => {
