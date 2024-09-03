@@ -11,7 +11,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2e3047;
+  /* background: #2e3047; */
+  /* background: linear-gradient(#f303df80, #f702e280),
+    url(https://cdn.prod.website-files.com/5ede763…/5ef1aba…_Pack-Signature.jpg); */
+  background-color: #d676a680;
+  /* background-image: linear-gradient(#d676a680, #d676a680),
+    url(https://cdn.prod.website-files.com/5ede763…/5ef1aba…_Pack-Signature.jpg); */
+  background-position: 0 0, 50%;
+  background-repeat: repeat, no-repeat;
+  background-size: auto, cover;
 }
 .container {
   position: relative;
@@ -128,7 +136,7 @@ select {
   color: #fff;
   border-radius: 5px;
   margin: 25px 0;
-  background-color: #6d39aa;
+  background-color: #e53089;
   transition: all 0.3s linear;
   cursor: pointer;
 }
@@ -195,4 +203,13 @@ input[type="number"] {
 #loadingIndicator {
   background-color: red;
 }
+.logo {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  height: 100%; /* Adjust as needed */
+  border-radius: 0.375rem;
+  width: 160px;
 
+  max-width: 100%;
+}
