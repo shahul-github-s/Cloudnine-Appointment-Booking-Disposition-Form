@@ -41,8 +41,7 @@
                 <label>Agent Name</label>
                 <select name="Agent Name" id="agentName" required>
                   <option disabled selected>Select Agent Name</option>
-                  <option value="Shahul Hameed S">Shahul Hameed S</option>
-                  <option value="Kashinath">Kashinath</option>
+                  <!-- Options will be populated here by JavaScript -->
                 </select>
               </div>
               <div class="input-field">
@@ -84,8 +83,6 @@
                 <label>Hospital Location</label>
                 <select name="Hospital Location" id="hospitalLocation" required>
                   <option disabled selected>Select Hospital Location</option>
-                  <option value="TNG">TNG</option>
-                  <option value="OMR">OMR</option>
                 </select>
               </div>
 
@@ -118,12 +115,6 @@
                   required
                 >
                   <option selected disabled>Select Doctor Specilization</option>
-                  <option value="Pediatric">Pediatric</option>
-                  <option value="Gyaecology">Gyaecology</option>
-                  <option value="Fertility">Fertility</option>
-                  <option value="Pregnancy">Pregnancy</option>
-                  <option value="Radiology">Radiology</option>
-                  <option value="Allied Services">Allied Services</option>
                 </select>
               </div>
               <div class="input-field">
@@ -305,15 +296,82 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         fetch(
-          "https://script.google.com/macros/s/AKfycbzFfysyBjqRHLGQghrHX2TZ2rDKKHXI_EO-VaVwMfUkuKAJNHn_uDoJzMHF198-LXo/exec",
-          { mode: "no-cors" }
+          "https://script.google.com/macros/s/AKfycbzzeMsUbx0k3Ahk18VUMf5kW19pXHydsFuKhwHUzEYUhLIi1rlP0cy3TNqWF2AW3Esf/exec"
         )
-          .then((response) => response.text())
+          .then((response) => response.json())
           .then((data) => {
-            document.getElementById("campaignType").innerHTML += data;
+            const campaignTypeDropdown = document.getElementById("agentName");
+            data.forEach((item) => {
+              const option = document.createElement("option");
+              option.value = item;
+              option.textContent = item;
+              campaignTypeDropdown.appendChild(option);
+            });
+          })
+          .catch((error) => console.error("Error fetching Agent Name:", error));
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch(
+          "https://script.google.com/macros/s/AKfycby_RgFa9QvyZVPihoHjfBwOV6-HpKmC4yERAHtZ_h4sStLmafO1oP2uoA6I_KyU2HkU/exec"
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const campaignTypeDropdown =
+              document.getElementById("campaignType");
+            data.forEach((item) => {
+              const option = document.createElement("option");
+              option.value = item;
+              option.textContent = item;
+              campaignTypeDropdown.appendChild(option);
+            });
           })
           .catch((error) =>
             console.error("Error fetching campaign types:", error)
+          );
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch(
+          "https://script.google.com/macros/s/AKfycbwT_aCsaVrsQN9sYzcl5uc26UsmrtXPLDzh1T-fjeZ81bvlZAKuM5dv-K_JiHb8-7bK/exec"
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const campaignTypeDropdown =
+              document.getElementById("hospitalLocation");
+            data.forEach((item) => {
+              const option = document.createElement("option");
+              option.value = item;
+              option.textContent = item;
+              campaignTypeDropdown.appendChild(option);
+            });
+          })
+          .catch((error) =>
+            console.error("Error fetching Hospital Location:", error)
+          );
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch(
+          "https://script.google.com/macros/s/AKfycbya_GjL8loQAogFABq0e83_OmlEjzoxEhqno9a-m1-xLTnuzcbQcwwaApEecREVWx9E/exec"
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const campaignTypeDropdown = document.getElementById(
+              "doctorSpecilization"
+            );
+            data.forEach((item) => {
+              const option = document.createElement("option");
+              option.value = item;
+              option.textContent = item;
+              campaignTypeDropdown.appendChild(option);
+            });
+          })
+          .catch((error) =>
+            console.error("Error fetching Hospital Location:", error)
           );
       });
     </script>
