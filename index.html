@@ -49,8 +49,7 @@
                 <label>Campaign Type</label>
                 <select name="Campaign Type" id="campaignType" required>
                   <option disabled selected>Select Campaign Type</option>
-                  <option value="Inbound">Inbound</option>
-                  <option value="IB Follow up">IB Follow up</option>
+                  <!-- Options will be populated here by JavaScript -->
                 </select>
               </div>
             </div>
@@ -302,6 +301,20 @@
         // Reset the "Hospital Location" dropdown to the default option
         document.getElementById("hospitalLocation").selectedIndex = 0;
       }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch(
+          "https://script.google.com/macros/s/AKfycbxcjfI7uay-UryQJ301Yt0sfsHzOmFkbQFbmtkiEIU4TOfx1IDfJwSX0A6bxZcADT-r/exec"
+        )
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("campaignType").innerHTML += data;
+          })
+          .catch((error) =>
+            console.error("Error fetching campaign types:", error)
+          );
+      });
     </script>
   </body>
 </html>
